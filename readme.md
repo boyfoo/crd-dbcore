@@ -35,6 +35,6 @@
 
 查询资源: `kb get dc`
 
-测试结束，删除测试资源`kb delete -f crd/crd-test.yaml`
+### 简单的使用client
 
-
+参看`v1.0.2`的`main.go`文件
