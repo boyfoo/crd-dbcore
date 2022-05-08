@@ -27,4 +27,14 @@
 
 新增 `pkg/k8sconfig`，内提供获取客户端的方法，目前代码截止查看`tag:v1.0.1`
 
+### 发布自定义crd
+
+发布crd: `kb apply -f crd/crd.yaml`
+
+发布测试资源：`kb apply -f crd/crd-test.yaml`
+
+查询资源: `kb get dc`
+
+测试结束，删除测试资源`kb delete -f crd/crd-test.yaml`
+
 
