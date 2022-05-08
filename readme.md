@@ -57,3 +57,6 @@
 
 规范文档：https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.0.md
 
+### 新增status子资源
+
+见`tag:v1.0.4`文件`crd/crd.yaml`，修改`pkg/apis/dbconfig/v1/types.go`内`DbConfigStatus.Replicas`类型为`string`
