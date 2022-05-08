@@ -48,3 +48,5 @@
 新建控制器管理文件`k8sconfig/initManger.go`
 
 `main.go`中调用初始化控制器管理
+
+具体代码查看`tag:v1.0.3`
