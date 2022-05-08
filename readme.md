@@ -38,3 +38,13 @@
 ### 简单的使用client
 
 参看`v1.0.2`的`main.go`文件
+
+### 新增控制器管理基础版
+
+在`go.mod`中新增`sigs.k8s.io/controller-runtime v0.9.6`
+
+新增文件`controllers/DbConfigController.go`
+
+新建控制器管理文件`k8sconfig/initManger.go`
+
+`main.go`中调用初始化控制器管理
