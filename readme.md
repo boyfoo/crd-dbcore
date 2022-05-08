@@ -60,3 +60,12 @@
 ### 新增status子资源
 
 见`tag:v1.0.4`文件`crd/crd.yaml`，修改`pkg/apis/dbconfig/v1/types.go`内`DbConfigStatus.Replicas`类型为`string`
+
+### 新增字段打印和伸缩属性设置字段
+
+查看`tag:v1.0.5`
+
+在`crd.yaml`中新增`additionalPrinterColumns`参数添加打印字段
+
+在`crd.yaml`中`subresources.scale`新增伸缩字段路径
+

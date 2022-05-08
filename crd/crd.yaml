@@ -12,6 +12,14 @@ spec:
       # 是否有效
       served: true
       storage: true
+      # 新增kb get dc 响应字段 没有值是因为还控制器中操作提供值
+      additionalPrinterColumns:
+        - name: replicas
+          type: string
+          jsonPath: .spec.status.replicas
+        - name: Age
+          type: date
+          jsonPath: .metadata.creationTimestamp
       schema:
         openAPIV3Schema:
           type: object
@@ -21,8 +29,8 @@ spec:
               properties:
                 replicas:
                   type: integer
-                  #                  minimum: 1  # 规则：最小值是1
-                  #                  maximum: 5 # 规则：最大5个
+                  # minimum: 1  # 规则：最小值是1
+                  # maximum: 5 # 规则：最大5个
                   default: 1  # 默认
                 dsn:
                   type: string
@@ -32,10 +40,12 @@ spec:
               type: object
               properties:
                 replicas:
-                  type: string
-      subresources:
-        # 启动子资源
-        status: { }
+                  type: string  #最终状态副本数
+      subresources: # 启动子资源
+        status: { } # 启动了上面定义的status字段内容
+        scale: # 扩容属性
+          specReplicasPath: .spec.replicas    #期望副本数
+          statusReplicasPath: .status.replicas  #最终副本数
 
   # 范围是属于namespace的 ,可以是 Namespaced 或 Cluster
   scope: Namespaced
