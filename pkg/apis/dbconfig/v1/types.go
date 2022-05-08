@@ -18,8 +18,8 @@ type DbConfig struct {
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// DbConfigs
-type DbConfigs struct {
+// DbConfigList
+type DbConfigList struct {
 	metav1.TypeMeta `json:",inline"`
 	// +optional
 	metav1.ListMeta `json:"metadata,omitempty"`
