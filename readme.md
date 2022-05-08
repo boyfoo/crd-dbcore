@@ -50,3 +50,10 @@
 `main.go`中调用初始化控制器管理
 
 具体代码查看`tag:v1.0.3`
+
+### 自定义字段验证
+
+文档：https://kubernetes.io/zh/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#validation
+
+规范文档：https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.0.md
+

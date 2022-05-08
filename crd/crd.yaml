@@ -21,7 +21,17 @@ spec:
               properties:
                 replicas:
                   type: integer
+#                  minimum: 1  # 规则：最小值是1
+#                  maximum: 5 # 规则：最大5个
+                  default: 1  # 默认
                 dsn:
+                  type: string
+              required: # 必须要有的字段
+                - dsn
+            status: # 子内容
+              type: object
+              properties:
+                replicas:
                   type: string
   # 范围是属于namespace的 ,可以是 Namespaced 或 Cluster
   scope: Namespaced
