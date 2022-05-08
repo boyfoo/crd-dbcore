@@ -2,4 +2,7 @@ module github.com/shenyisyn/dbcore
 
 go 1.15
 
-require k8s.io/apimachinery v0.20.5 // indirect
+require (
+	k8s.io/apimachinery v0.20.5
+	k8s.io/client-go v0.20.5
+)

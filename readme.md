@@ -2,6 +2,8 @@
 
 `go get -u k8s.io/apimachinery@v0.20.5`
 
+`go get -u k8s.io/client-go@v0.20.5`
+
 添加对应的文件夹`pkg/apis/dbconfig/v1`，并新增文件`doc.go`，`register.go`，`types.go`，具体内容查询`v1-init`分支
 
 ### 生成代码
@@ -14,10 +16,13 @@
 
 将下载好的生成器移动至`$GOPATH/src/k8s.io`下，并重命名为`code-generator`，并执行`go mod download`
 
-在`$GOPATH/src/github.com/shenyisyn/dbcore` 目录下执行代码生成`$GOPATH/src/k8s.io/code-generator/generate-groups.sh all  github.com/shenyisyn/dbcore/pkg/client github.com/shenyisyn/dbcore/pkg/apis dbconfig:v1`
+在`$GOPATH/src/github.com/shenyisyn/dbcore`
+目录下执行代码生成`$GOPATH/src/k8s.io/code-generator/generate-groups.sh all  github.com/shenyisyn/dbcore/pkg/client github.com/shenyisyn/dbcore/pkg/apis dbconfig:v1`
 
-再将生成好的`v1/zz_generated.deepcopy.go`拷贝回来
+再将生成好的`v1/zz_generated.deepcopy.go`拷贝回来，将`client/`拷贝到`pkg`文件夹下
 
 之所以这么麻烦，是因为生成器本身是为了生成`src`下的包而编写的，需要把自己的项目模拟成该形态
+
+
 
 
