@@ -69,3 +69,8 @@
 
 在`crd.yaml`中`subresources.scale`新增伸缩字段路径
 
+### 控制器创建deploy
+
+创建模板构建器文件`builders/deploybuilder.go`，修改`controllers/DbConfigController.go`文件代码，调用构建器根据模板`builders/deptpl.go`部署`deploy`
+
+代码见`tag:v1.0.6`
