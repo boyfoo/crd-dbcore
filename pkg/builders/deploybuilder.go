@@ -15,6 +15,7 @@ import (
 type DeployBuilder struct {
 	deploy *v1.Deployment
 	client.Client
+	config *dbconfigv1.DbConfig
 }
 
 //目前软件的 命名规则
@@ -53,20 +54,30 @@ func NewDeployBuilder(config dbconfigv1.DbConfig, client client.Client) (*Deploy
 	return &DeployBuilder{
 		deploy: dep,
 		Client: client,
+		config: &config,
 	}, nil
 }
 
-// Replicas 设置副本
-func (d *DeployBuilder) Replicas(r int) *DeployBuilder {
-	*d.deploy.Spec.Replicas = int32(r)
+// apply 同步属性
+func (d *DeployBuilder) apply() *DeployBuilder {
+	*d.deploy.Spec.Replicas = int32(d.config.Spec.Replicas)
 	return d
 }
 
 func (d *DeployBuilder) Build(ctx context.Context) error {
 	// 未创建时没有值 就创建一个
 	if d.deploy.CreationTimestamp.IsZero() {
+		d.apply()
 		fmt.Println("创建新的 " + d.deploy.Name)
 		err := d.Create(ctx, d.deploy)
+		if err != nil {
+			return err
+		}
+	} else {
+		// 存在就是更新
+		patch := client.MergeFrom(d.deploy.DeepCopy())
+		d.apply()
+		err := d.Patch(ctx, d.deploy, patch)
 		if err != nil {
 			return err
 		}

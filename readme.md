@@ -74,3 +74,9 @@
 创建模板构建器文件`builders/deploybuilder.go`，修改`controllers/DbConfigController.go`文件代码，调用构建器根据模板`builders/deptpl.go`部署`deploy`
 
 代码见`tag:v1.0.6`
+
+### 控制器新增patch功能和扩容
+
+修改文件`builders/deploybuilder.go`内 `Build`方法和`apply`方法
+
+代码见`tag:v1.0.7`
