@@ -6,7 +6,7 @@
 
 添加对应的文件夹`pkg/apis/dbconfig/v1`，并新增文件`doc.go`，`register.go`，`types.go`，具体内容查询`v1-init`分支
 
-### 生成代码
+### 生成基础代码
 
 查看`go`路径：`go env | grep GOPATH`
 
@@ -27,7 +27,7 @@
 
 新增 `pkg/k8sconfig`，内提供获取客户端的方法，目前代码截止查看`tag:v1.0.1`
 
-### 发布自定义crd
+### 发布自定义crd至k8s
 
 发布crd: `kb apply -f crd/crd.yaml`
 
@@ -35,7 +35,7 @@
 
 查询资源: `kb get dc`
 
-### 简单的使用client
+### 简单的使用client实例
 
 参看`v1.0.2`的`main.go`文件
 
@@ -51,17 +51,17 @@
 
 具体代码查看`tag:v1.0.3`
 
-### 自定义字段验证
+### 自定义资源字段验证
 
 文档：https://kubernetes.io/zh/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#validation
 
 规范文档：https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.0.md
 
-### 新增status子资源
+### 新增status子资源(status: 资源实际状态)
 
 见`tag:v1.0.4`文件`crd/crd.yaml`，修改`pkg/apis/dbconfig/v1/types.go`内`DbConfigStatus.Replicas`类型为`string`
 
-### 新增字段打印和伸缩属性设置字段
+### 新增字段打印内容和伸缩属性设置
 
 查看`tag:v1.0.5`
 
@@ -69,21 +69,28 @@
 
 在`crd.yaml`中`subresources.scale`新增伸缩字段路径
 
-### 控制器创建deploy
+### 控制器根据自定义资源创建附属deploy
 
 创建模板构建器文件`builders/deploybuilder.go`，修改`controllers/DbConfigController.go`文件代码，调用构建器根据模板`builders/deptpl.go`部署`deploy`
 
 代码见`tag:v1.0.6`
 
-### 控制器新增patch功能和扩容
+### 控制器新增根据yaml修改功能
 
 修改文件`builders/deploybuilder.go`内 `Build`方法和`apply`方法
 
 代码见`tag:v1.0.7`
 
-### 删除子资源
+### 删除自定义资源触发删除附属子资源
 
 当删除`DBconfig`资源时自动删除创建的`deploy`子资源，需要在创建`deploy`时设置`OwnerReferences`，就可以自动删除子资源
 
 见`tag:v1.0.8`的`deploybuilder.go`文件下的`setOwner`方法
 
+###
+
+在`ininManager`新增监听对应资源的删除`deploy`触发事件，对应函数判断该被删除的`deploy`是否是`DbConfig`的附属子资源
+
+如果是重新触发`Reconcile`事件，目前是让资源从新创建`deploy`
+
+代码见`tag:v1.0.9`
