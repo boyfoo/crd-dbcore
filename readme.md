@@ -87,7 +87,7 @@
 
 见`tag:v1.0.8`的`deploybuilder.go`文件下的`setOwner`方法
 
-###
+### 删除附属资源重新创建
 
 在`ininManager`新增监听对应资源的删除`deploy`触发事件，对应函数判断该被删除的`deploy`是否是`DbConfig`的附属子资源
 
