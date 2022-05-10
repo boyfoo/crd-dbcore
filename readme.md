@@ -80,3 +80,10 @@
 修改文件`builders/deploybuilder.go`内 `Build`方法和`apply`方法
 
 代码见`tag:v1.0.7`
+
+### 删除子资源
+
+当删除`DBconfig`资源时自动删除创建的`deploy`子资源，需要在创建`deploy`时设置`OwnerReferences`，就可以自动删除子资源
+
+见`tag:v1.0.8`的`deploybuilder.go`文件下的`setOwner`方法
+

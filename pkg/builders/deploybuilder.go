@@ -6,6 +6,7 @@ import (
 	"fmt"
 	dbconfigv1 "github.com/shenyisyn/dbcore/pkg/apis/dbconfig/v1"
 	v1 "k8s.io/api/apps/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/yaml"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -64,10 +65,21 @@ func (d *DeployBuilder) apply() *DeployBuilder {
 	return d
 }
 
+// 设置关系owner
+func (d *DeployBuilder) setOwner() *DeployBuilder {
+	d.deploy.OwnerReferences = append(d.deploy.OwnerReferences, metav1.OwnerReference{
+		APIVersion: d.config.APIVersion,
+		Kind:       d.config.Kind,
+		Name:       d.config.Name,
+		UID:        d.config.UID,
+	})
+	return d
+}
+
 func (d *DeployBuilder) Build(ctx context.Context) error {
 	// 未创建时没有值 就创建一个
 	if d.deploy.CreationTimestamp.IsZero() {
-		d.apply()
+		d.apply().setOwner()
 		fmt.Println("创建新的 " + d.deploy.Name)
 		err := d.Create(ctx, d.deploy)
 		if err != nil {
