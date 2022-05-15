@@ -94,3 +94,19 @@
 如果是重新触发`Reconcile`事件，目前是让资源从新创建`deploy`
 
 代码见`tag:v1.0.9`
+
+### 更新状态触发和设置命令行打印字段
+
+修改`crd.yaml`文件内的`schema.status`子资源，新增`ready`字段和修改`replicas`类型
+
+修改`crd.yaml`文件内`additionalPrinterColumns`下的`Ready`展示字段
+
+修改`v1/types.go`内`DbConfigStatus`定义的格式，新增和修改属性与`crd.yaml`相同
+
+更新`crd`:`k apply -f crd/crd.yaml`
+
+修改`deptpl.go`新增一个休眠测试的`init`容器
+
+修改`initManager.go`新增`UpdateFunc`监听函数，监听状态变化
+
+见`tag:v1.0.10`

@@ -56,6 +56,16 @@ func (r *DbConfigController) OnDelete(event event.DeleteEvent, limitingInterface
 	}
 }
 
+func (r *DbConfigController) OnUpdate(event event.UpdateEvent, limitingInterface workqueue.RateLimitingInterface) {
+	for _, ref := range event.ObjectNew.GetOwnerReferences() {
+		if ref.Kind == Kind && ref.APIVersion == GroupApiVersion {
+			limitingInterface.Add(reconcile.Request{
+				NamespacedName: types.NamespacedName{Name: ref.Name, Namespace: event.ObjectNew.GetNamespace()},
+			})
+		}
+	}
+}
+
 func NewDbConfigController() *DbConfigController {
 	return &DbConfigController{}
 }

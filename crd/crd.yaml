@@ -14,9 +14,9 @@ spec:
       storage: true
       # 新增kb get dc 响应字段 没有值是因为还控制器中操作提供值
       additionalPrinterColumns:
-        - name: replicas
+        - name: Ready
           type: string
-          jsonPath: .spec.status.replicas
+          jsonPath: .status.ready
         - name: Age
           type: date
           jsonPath: .metadata.creationTimestamp
@@ -40,7 +40,10 @@ spec:
               type: object
               properties:
                 replicas:
-                  type: string  #最终状态副本数
+                  type: integer  #最终状态副本数
+                ready:
+                  type: string
+
       subresources: # 启动子资源
         status: { } # 启动了上面定义的status字段内容
         scale: # 扩容属性

@@ -35,6 +35,7 @@ func InitManager() {
 	err = builder.ControllerManagedBy(mgr).For(&v1.DbConfig{}).
 		Watches(&source.Kind{Type: &appsv1.Deployment{}}, handler.Funcs{
 			DeleteFunc: controller.OnDelete,
+			UpdateFunc: controller.OnUpdate,
 		}).
 		Complete(controller)
 	if err != nil {

@@ -17,6 +17,10 @@ spec:
         app: dbcore-{{ .Namespace}}-{{ .Name }}
         version: v1
     spec:
+      initContainers:
+        - name: init-test
+          image: busybox:1.28
+          command: ["sh", "-c", "echo sleeping && sleep 10"]
       containers:
         - name: dbcore-{{ .Namespace}}-{{ .Name }}-container
           image: docker.io/shenyisyn/dbcore:v1

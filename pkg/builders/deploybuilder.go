@@ -93,6 +93,15 @@ func (d *DeployBuilder) Build(ctx context.Context) error {
 		if err != nil {
 			return err
 		}
+		//修改状态 deploy已准备的pod
+		replicas := d.deploy.Status.ReadyReplicas
+		d.config.Status.Replicas = replicas
+		d.config.Status.Ready = fmt.Sprintf("%d/%d", replicas, d.config.Spec.Replicas)
+
+		err = d.Client.Status().Update(ctx, d.config)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
