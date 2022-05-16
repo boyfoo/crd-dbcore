@@ -13,6 +13,8 @@ import (
 	"text/template"
 )
 
+const CMAnnotation = "dbcore.config/md5"
+
 type DeployBuilder struct {
 	deploy    *v1.Deployment
 	cmBuilder *ConfigMapBuilder
@@ -94,16 +96,23 @@ func (d *DeployBuilder) Build(ctx context.Context) error {
 			return err
 		}
 
+		d.setCMAnnotation(d.cmBuilder.DataKey)
 		fmt.Println("创建新的 " + d.deploy.Name)
 		err = d.Create(ctx, d.deploy)
 		if err != nil {
 			return err
 		}
 	} else {
+		err := d.cmBuilder.Build(ctx)
+		if err != nil {
+			return err
+		}
+
 		// 存在就是更新
 		patch := client.MergeFrom(d.deploy.DeepCopy())
 		d.apply()
-		err := d.Patch(ctx, d.deploy, patch)
+		d.setCMAnnotation(d.cmBuilder.DataKey)
+		err = d.Patch(ctx, d.deploy, patch)
 		if err != nil {
 			return err
 		}
@@ -118,4 +127,8 @@ func (d *DeployBuilder) Build(ctx context.Context) error {
 		}
 	}
 	return nil
+}
+
+func (d *DeployBuilder) setCMAnnotation(configStr string) {
+	d.deploy.Spec.Template.Annotations[CMAnnotation] = configStr
 }

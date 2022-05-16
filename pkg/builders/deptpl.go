@@ -16,6 +16,8 @@ spec:
       labels:
         app: dbcore-{{ .Namespace}}-{{ .Name }}
         version: v1
+      annotations:
+        dbcore.config/md5: ''
     spec:
       containers:
         - name: dbcore-{{ .Namespace}}-{{ .Name }}-container

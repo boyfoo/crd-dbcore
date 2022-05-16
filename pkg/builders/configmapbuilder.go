@@ -14,8 +14,9 @@ import (
 )
 
 type ConfigMapBuilder struct {
-	cm     *corev1.ConfigMap
-	config *configv1.DbConfig
+	cm      *corev1.ConfigMap
+	config  *configv1.DbConfig
+	DataKey string // md5更新数据
 	client.Client
 }
 
@@ -42,6 +43,19 @@ func (this *ConfigMapBuilder) setOwner() *ConfigMapBuilder {
 		})
 	return this
 }
+
+const configMapKey = "app.yml"
+
+// 把configmap内的key=app.yml的内容计算出md5
+func (this *ConfigMapBuilder) parseKey() *ConfigMapBuilder {
+	if appData, ok := this.cm.Data[configMapKey]; ok {
+		this.DataKey = Md5(appData)
+		return this
+	}
+	this.DataKey = ""
+	return this
+}
+
 func (this *ConfigMapBuilder) apply() *ConfigMapBuilder {
 	// Delims 设置分隔符，这边是测试一下用其他类型的分隔符
 	tpl, err := template.New("app.yml").Delims("[[", "]]").Parse(cmtpl)
@@ -55,7 +69,7 @@ func (this *ConfigMapBuilder) apply() *ConfigMapBuilder {
 		log.Println(err)
 		return this
 	}
-	this.cm.Data["app.yml"] = tplRet.String()
+	this.cm.Data[configMapKey] = tplRet.String()
 	fmt.Println("this.cm.Data")
 	fmt.Println(this.cm.Data)
 	return this
@@ -63,14 +77,14 @@ func (this *ConfigMapBuilder) apply() *ConfigMapBuilder {
 
 func (this *ConfigMapBuilder) Build(ctx context.Context) error {
 	if this.cm.CreationTimestamp.IsZero() {
-		this.apply().setOwner() //同步  所需要的属性 如 副本数 , 并且设置OwnerReferences
+		this.apply().setOwner().parseKey() //同步  所需要的属性 如 副本数 , 并且设置OwnerReferences
 		err := this.Create(ctx, this.cm)
 		if err != nil {
 			return err
 		}
 	} else {
 		patch := client.MergeFrom(this.cm.DeepCopy())
-		this.apply() //同步  所需要的属性 如 副本数
+		this.apply().parseKey() //同步  所需要的属性 如 副本数
 		err := this.Patch(ctx, this.cm, patch)
 		if err != nil {
 			return err

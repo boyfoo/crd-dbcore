@@ -118,3 +118,8 @@
 并且运行`k apply -f mysql.yaml`，创建`mysql`，并创建库`test`
 
 见 `tag:v1.1.0`
+
+### 修改configmap内容重新隐射
+
+将`configmap`计算成`md5`，每次更新更新`md5`，当值不一样时`deploy`重自动滚动更新，见`ConfigMapBuilder.DataKey`字段的使用
+
