@@ -116,3 +116,5 @@
 创建`configmap` 映射进`pod`中
 
 并且运行`k apply -f mysql.yaml`，创建`mysql`，并创建库`test`
+
+见 `tag:v1.1.0`
