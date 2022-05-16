@@ -110,3 +110,9 @@
 修改`initManager.go`新增`UpdateFunc`监听函数，监听状态变化
 
 见`tag:v1.0.10`
+
+### 设置configmap
+
+创建`configmap` 映射进`pod`中
+
+并且运行`k apply -f mysql.yaml`，创建`mysql`，并创建库`test`

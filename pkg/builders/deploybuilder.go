@@ -14,9 +14,10 @@ import (
 )
 
 type DeployBuilder struct {
-	deploy *v1.Deployment
+	deploy    *v1.Deployment
+	cmBuilder *ConfigMapBuilder
+	config    *dbconfigv1.DbConfig
 	client.Client
-	config *dbconfigv1.DbConfig
 }
 
 //目前软件的 命名规则
@@ -25,7 +26,7 @@ func deployName(name string) string {
 }
 
 // NewDeployBuilder 根据模板内容构建出deploy
-func NewDeployBuilder(config dbconfigv1.DbConfig, client client.Client) (*DeployBuilder, error) {
+func NewDeployBuilder(config *dbconfigv1.DbConfig, client client.Client) (*DeployBuilder, error) {
 	dep := &v1.Deployment{}
 
 	if err := client.Get(context.Background(), types.NamespacedName{
@@ -52,10 +53,16 @@ func NewDeployBuilder(config dbconfigv1.DbConfig, client client.Client) (*Deploy
 		fmt.Println("模板内容映射到结构体成功")
 	}
 
+	builder, err := NewConfigMapBuilder(config, client)
+	if err != nil {
+		return nil, err
+	}
+
 	return &DeployBuilder{
-		deploy: dep,
-		Client: client,
-		config: &config,
+		deploy:    dep,
+		Client:    client,
+		config:    config,
+		cmBuilder: builder,
 	}, nil
 }
 
@@ -80,8 +87,15 @@ func (d *DeployBuilder) Build(ctx context.Context) error {
 	// 未创建时没有值 就创建一个
 	if d.deploy.CreationTimestamp.IsZero() {
 		d.apply().setOwner()
+
+		fmt.Println("创建新的configmap")
+		err := d.cmBuilder.Build(ctx)
+		if err != nil {
+			return err
+		}
+
 		fmt.Println("创建新的 " + d.deploy.Name)
-		err := d.Create(ctx, d.deploy)
+		err = d.Create(ctx, d.deploy)
 		if err != nil {
 			return err
 		}

@@ -28,7 +28,7 @@ func (r *DbConfigController) Reconcile(ctx context.Context, req reconcile.Reques
 		fmt.Println("err := r.Get(ctx, req.NamespacedName, config)")
 		return reconcile.Result{}, err
 	}
-	builder, err := builders.NewDeployBuilder(*config, r.Client)
+	builder, err := builders.NewDeployBuilder(config, r.Client)
 	if err != nil {
 		fmt.Println("builder, err := builders.NewDeployBuilder(*config, r.Client)")
 		return reconcile.Result{}, err
