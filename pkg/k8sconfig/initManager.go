@@ -20,6 +20,12 @@ func InitManager() {
 
 	mgr, err := manager.New(K8sRestConfig(), manager.Options{
 		Logger: k8slog.Log.WithName("dbcore"),
+
+		// 防止多个进程同时操作同一个资源
+		LeaderElection:          true,
+		LeaderElectionID:        "mydbcore-lock",
+		LeaderElectionNamespace: "default",
+		//MetricsBindAddress:      ":8081",
 	})
 	if err != nil {
 		log.Fatal("创建管理器失败", err.Error())
