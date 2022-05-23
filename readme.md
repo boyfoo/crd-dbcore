@@ -8,6 +8,8 @@
 
 ### 生成基础代码
 
+#### 方式1
+
 查看`go`路径：`go env | grep GOPATH`
 
 将`v1-init`分支代码复制至`$GOPATH/src/github.com/shenyisyn/dbcore` 目录下，这个目录是`go.mod`内的`module`名称
@@ -22,6 +24,12 @@
 再将生成好的`v1/zz_generated.deepcopy.go`拷贝回来，将`client/`拷贝到`pkg`文件夹下
 
 之所以这么麻烦，是因为生成器本身是为了生成`src`下的包而编写的，需要把自己的项目模拟成该形态
+
+#### 方式2
+
+下载生成器源码 `git clone git@github.com:kubernetes/code-generator.git`，切换到对于版本的分支`git checkout v0.20.2`
+
+执行安装工具脚本 `go install ./cmd/{client-gen,deepcopy-gen,informer-gen,lister-gen}`
 
 ### 新增工具代码
 
