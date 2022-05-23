@@ -16,7 +16,7 @@
 
 <!-- 下载生成器地址: https://github.com/kubernetes/code-generator/releases/tag/kubernetes-1.20.5 -->
 
-将下载好的生成器移动至`$GOPATH/src/k8s.io`下，并重命名为`code-generator`，并执行`go mod download`
+将下载好的生成器源码移动至`$GOPATH/src/k8s.io`下，并执行`go mod download`
 
 在`$GOPATH/src/github.com/shenyisyn/dbcore`
 目录下执行代码生成`$GOPATH/src/k8s.io/code-generator/generate-groups.sh all  github.com/shenyisyn/dbcore/pkg/client github.com/shenyisyn/dbcore/pkg/apis dbconfig:v1`
